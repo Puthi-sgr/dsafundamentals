@@ -129,6 +129,142 @@ export class DoublyLinkedList {
         return toBeRemoveData;
     }
 
+    /*
+        3 Potential cases
+            1. No list
+            2. No node found
+            4. Insert at tail
+            3. Normal
+        
+        - Empty list
+        if(head == null && tail == null) return null
+        
+        - No node found
+            if(reaches the end of the list and no matching node ) return null
+        
+        -At tail. How do we know if we are at tail?
+        if(node == tail)
+        - newnode.next -> null
+        - newnode.prev -> tail
+        - tail.next -> newNode
+        
+        - curr == matching node
+        - newnode.next -> curr.next
+        - newnode.prev -> curr
+        - curr.next.prev -> newNode
+        - curr.next>newNode
+
+        
+    */
+    insertAfter(node: Node, value: string): Node | null {
+
+        if (this.head === null && this.tail === null) {
+            return null;
+        }
+
+
+        if (this.tail == node) {
+            let newNode = new Node(value);
+            newNode.next = null;
+            newNode.prev = this.tail;
+            this.tail.next = newNode;
+            this.tail = newNode;
+            return newNode;
+        }
+
+        let current = this.head;
+        while (current) {
+
+            if (current == node) {
+                let newNode = new Node(value);
+                newNode.next = current.next;
+                newNode.prev = current;
+                current.next!.prev = newNode;
+                current.next = newNode;
+                return newNode; //Return in this block to avoid moving current forward
+            }
+            current = current.next;
+        }
+        return null; //No node found
+    }
+
+
+
+    /*
+        5 Potential cases
+            1. No list
+            2. No node found
+            3. No node to be cut off after that node(tail occurrence)
+            4. Cut off at middle 
+            5. Cut off at tail
+        
+        - Empty list
+        if(head == null && tail == null) return null
+        
+        - No node found
+            if(reaches the end of the list and no matching node ) return null
+        
+        - Matching tail node but no node to be cut off
+            if(node == tail) return null
+
+        - Matching middle node
+            if(node == curr)
+                - toBeRemove = curr.next
+                - curr.next = toBeRemove.next
+                - tobeRemove.next.prev = curr
+                - Detach toBeRemove
+        
+        - A cut off at tail node. How do we know the next node is a tail
+            if(node == curr && curr.next == tail)
+                - toBeRemove = tail
+                - curr.next = null
+                - tobeRemove.prev = null
+                - tail =curr
+                
+    */
+
+    removeAfter(node: Node): void {
+
+        if (this.head === null && this.tail === null) {
+            return;
+
+        }
+
+        if (this.tail == node) {
+            return;
+        }
+
+        let current = this.head;
+
+        while (current) {
+            if (current == node && current.next != null) {
+                let toBeRemove = current.next;
+                current.next = toBeRemove.next;
+
+                if (toBeRemove.next != null) {
+                    toBeRemove.next!.prev = current;
+                    //Detach toBeRemove
+                    toBeRemove.next = null;
+                    toBeRemove.prev = null;
+                } else {
+                    current.next = null;
+
+                    toBeRemove!.prev = null;
+                    this.tail = current;
+                }
+
+             
+
+                return;
+            } 
+
+            current = current.next;
+        }
+
+        return; //No node found
+    }
+
+
     printForward(): void {
         let node = this.head;
         const dataList: string[] = [];

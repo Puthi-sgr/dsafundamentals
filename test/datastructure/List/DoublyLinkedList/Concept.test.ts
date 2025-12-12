@@ -1,4 +1,4 @@
-import { DoublyLinkedList } from '../../../../src/datastructure/List/DoublyLinkedList/Concept';
+import { DoublyLinkedList, Node } from '../../../../src/datastructure/List/DoublyLinkedList/Concept';
 
 describe('DoublyLinkedList addLast', () => {
     let list: DoublyLinkedList;
@@ -107,5 +107,92 @@ describe('DoublyLinkedList addFirst and removeLast', () => {
             node = node.next;
         }
         expect(forward).toEqual(['A', 'B']);
+    });
+});
+
+// New tests: insertAfter and removeAfter
+describe('DoublyLinkedList insertAfter and removeAfter', () => {
+    let list: DoublyLinkedList;
+
+    beforeEach(() => {
+        list = new DoublyLinkedList();
+    });
+
+    test('insertAfter on empty list returns null', () => {
+        const node = new Node('A');
+        const result = list.insertAfter(node, 'B');
+        expect(result).toBeNull();
+    });
+
+    test('insertAfter inserts after tail and updates tail', () => {
+        list.addLast('A');
+        const tailNode = list.tail!;
+        const newNode = list.insertAfter(tailNode, 'B');
+
+        expect(newNode?.data).toBe('B');
+        expect(list.tail?.data).toBe('B');
+        expect(list.tail?.prev?.data).toBe('A');
+        expect(list.tail?.next).toBeNull();
+        expect(tailNode.next?.data).toBe('B');
+    });
+
+    test('insertAfter inserts in middle correctly', () => {
+        list.addLast('A');
+        list.addLast('C');
+        const headNode = list.head!;
+
+        const newNode = list.insertAfter(headNode, 'B');
+
+        expect(newNode?.data).toBe('B');
+        expect(list.head?.next?.data).toBe('B');
+        expect(list.tail?.prev?.data).toBe('B');
+        expect(newNode?.prev?.data).toBe('A');
+        expect(newNode?.next?.data).toBe('C');
+    });
+
+    test('insertAfter returns null if node not found', () => {
+        list.addLast('A');
+        const foreignNode = new Node('X');
+        const result = list.insertAfter(foreignNode, 'B');
+        expect(result).toBeNull();
+    });
+
+    test('removeAfter on empty list does nothing', () => {
+        const node = new Node('A');
+        list.removeAfter(node);
+        expect(list.head).toBeNull();
+    });
+
+    test('removeAfter tail does nothing', () => {
+        list.addLast('A');
+        const tailNode = list.tail!;
+        list.removeAfter(tailNode);
+        expect(list.tail?.data).toBe('A');
+        expect(list.tail?.next).toBeNull();
+    });
+
+    test('removeAfter removes middle node correctly', () => {
+        list.addLast('A');
+        list.addLast('B');
+        list.addLast('C');
+        const headNode = list.head!; // A
+
+        // Remove B (which is after A)
+        list.removeAfter(headNode);
+
+        expect(list.head?.next?.data).toBe('C');
+        expect(list.tail?.prev?.data).toBe('A');
+    });
+
+    test('removeAfter removes tail node correctly (when removing after node-before-tail)', () => {
+        list.addLast('A');
+        list.addLast('B');
+        const headNode = list.head!; // A
+
+        // Remove B (which is tail)
+        list.removeAfter(headNode);
+
+        expect(list.tail?.data).toBe('A');
+        expect(list.tail?.next).toBeNull();
     });
 });
