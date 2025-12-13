@@ -1,10 +1,10 @@
 import { DoublyLinkedList, Node } from '../../../../src/datastructure/List/DoublyLinkedList/Concept';
 
 describe('DoublyLinkedList addLast', () => {
-    let list: DoublyLinkedList;
+    let list: DoublyLinkedList<string>;
 
     beforeEach(() => {
-        list = new DoublyLinkedList();
+        list = new DoublyLinkedList<string>();
     });
 
     test('adds to empty list', () => {
@@ -49,10 +49,10 @@ describe('DoublyLinkedList addLast', () => {
 
 // New tests: addFirst and removeLast
 describe('DoublyLinkedList addFirst and removeLast', () => {
-    let list: DoublyLinkedList;
+    let list: DoublyLinkedList<string>;
 
     beforeEach(() => {
-        list = new DoublyLinkedList();
+        list = new DoublyLinkedList<string>();
     });
 
     test('addFirst on empty list sets head and tail', () => {
@@ -112,10 +112,10 @@ describe('DoublyLinkedList addFirst and removeLast', () => {
 
 // New tests: insertAfter and removeAfter
 describe('DoublyLinkedList insertAfter and removeAfter', () => {
-    let list: DoublyLinkedList;
+    let list: DoublyLinkedList<string>;
 
     beforeEach(() => {
-        list = new DoublyLinkedList();
+        list = new DoublyLinkedList<string>();
     });
 
     test('insertAfter on empty list returns null', () => {

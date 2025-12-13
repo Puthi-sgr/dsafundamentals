@@ -3,12 +3,12 @@
 //Foundational structure of a doubly linked list
 
 //We can think of node is like a car on a railway. Its dumb, it knows nothing about the bigger picture
-export class Node {
-    data: string;
-    prev: Node | null = null;
-    next: Node | null = null;
+export class Node<T> {
+    data: T;
+    prev: Node<T> | null = null;
+    next: Node<T> | null = null;
 
-    constructor(data: string) {
+    constructor(data: T) {
         this.data = data;
     }
 }
@@ -21,13 +21,13 @@ export class Node {
 
 //For the big, the one who owns the list
 //All it cares about is where the head and tail are and provide operations to manipulate the dumb nodes.
-export class DoublyLinkedList {
+export class DoublyLinkedList<T> {
     //Invariant: head.prev MUST ALWAYS BE NULL
     //Invariant: tail.next MUST ALWAYS BE NULL
     //If any logic ends with these criteria being violated. The Logic is BROKEN
 
-    head: Node | null = null;
-    tail: Node | null = null;
+    head: Node<T> | null = null;
+    tail: Node<T> | null = null;
 
     //The reason that it is void because it needs to follow the principle of hiding the structure of the list it self. Remember the invariant of this class is only to manage the chained nodes not exposing the structure
 
@@ -43,7 +43,7 @@ export class DoublyLinkedList {
             newprev to tail
             tail moves to new tail = new
     */
-    addLast(data: string): void {
+    addLast(data: T): void {
         var newNode = new Node(data);
 
         //Empty list
@@ -72,7 +72,7 @@ export class DoublyLinkedList {
                 newNode.next points head
                 head move to new node
     */
-    addFist(data: string): void {
+    addFist(data: T): void {
         let newNode = new Node(data);
 
         if (this.head === null && this.tail === null) {
@@ -103,7 +103,7 @@ export class DoublyLinkedList {
                 tail move back one node
                 tail.next = null
     */
-    removeLast(): string | null {
+    removeLast(): T | null {
 
         if (this.head === null && this.tail === null) {
             return null;
@@ -156,7 +156,7 @@ export class DoublyLinkedList {
 
         
     */
-    insertAfter(node: Node, value: string): Node | null {
+    insertAfter(node: Node<T>, value: T): Node<T> | null {
 
         if (this.head === null && this.tail === null) {
             return null;
@@ -223,7 +223,7 @@ export class DoublyLinkedList {
                 
     */
 
-    removeAfter(node: Node): void {
+    removeAfter(node: Node<T>): void {
 
         if (this.head === null && this.tail === null) {
             return;
@@ -253,10 +253,10 @@ export class DoublyLinkedList {
                     this.tail = current;
                 }
 
-             
+
 
                 return;
-            } 
+            }
 
             current = current.next;
         }
@@ -267,7 +267,7 @@ export class DoublyLinkedList {
 
     printForward(): void {
         let node = this.head;
-        const dataList: string[] = [];
+        const dataList: T[] = [];
 
         while (node) {
             dataList.push(node.data);
@@ -279,7 +279,7 @@ export class DoublyLinkedList {
 
     printBackward(): void {
         let node = this.tail;
-        const dataList: string[] = [];
+        const dataList: T[] = [];
 
         while (node) {
             dataList.push(node.data);
