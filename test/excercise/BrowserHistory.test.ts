@@ -1,4 +1,4 @@
-import { BrowserHistory } from "../../src/excercise/BrowserHistory";
+import { BrowserHistory } from "../../src/datastructure/List/DoublyLinkedList/excercise/BrowserHistory";
 
 describe("BrowserHistory", () => {
     let history: BrowserHistory;

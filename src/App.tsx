@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserHistory } from "./excercise/BrowserHistory";
+import { BrowserHistory } from "./datastructure/List/DoublyLinkedList/excercise/BrowserHistory";
 
 const BrowserHistoryComponent = () => {
   const [history] = useState(() => new BrowserHistory());

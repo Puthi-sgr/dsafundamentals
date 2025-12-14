@@ -1,6 +1,6 @@
 //Define a browser history class which modelled a doubly linked list
 
-import { DoublyLinkedList, Node } from "../datastructure/List/DoublyLinkedList/Concept";
+import { DoublyLinkedList, Node } from "../Concept";
 
 /*
     - Contract
