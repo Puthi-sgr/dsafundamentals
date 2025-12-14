@@ -2,6 +2,19 @@
 
 import { DoublyLinkedList, Node } from "../datastructure/List/DoublyLinkedList/Concept";
 
+/*
+    - Contract
+        - Edge cases stays at the same node
+        
+    - Concept for Browser History
+        - History is a doubly linked list of urls, it owns the list structure
+        - Current position is modelled to mirror the uer's position in the browser history -> current == state
+        - We have 2 main behaviors
+            - Mutation behavior that modifies the history (List) structure
+            - Non-mutation behavior that only moves the current position 
+
+            
+*/
 export class BrowserHistory {
     private historyList = new DoublyLinkedList<string>();
     private current: Node<string> | null = null; //The current models the user current position in a page
@@ -44,9 +57,9 @@ export class BrowserHistory {
                 return;
             } else {
                 //case 3
-                this.historyList.removeAfter(this.current);
+                this.historyList.cutOffAfter(this.current);
                 this.historyList.insertAfter(this.current, url);
-                this.current = this.historyList.tail;
+                this.current = this.current.next;
                 return;
             }
         }
@@ -108,8 +121,8 @@ export class BrowserHistory {
     //get current page (non-mutation behavior)
     /* 
         2 possible cases
-            1. No current page
-            2. There is a current page
+            1. No current page 
+            2. There is a current page 
     */
     getCurrentPage(): string | null {
         //case 1

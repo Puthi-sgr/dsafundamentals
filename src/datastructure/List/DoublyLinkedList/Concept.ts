@@ -188,7 +188,67 @@ export class DoublyLinkedList<T> {
         return null; //No node found
     }
 
+    /*
+        cut off after
+        contract: 
+            - input a node to remove after
+            - output void
+            - if no node return nul
 
+        design
+            - traverse the list to find the matching node
+            - once found, cut off internally no return
+            - edge case scenario return 
+
+            - 4 potential cases
+                1. No list
+                2. No node found
+                3. Cut off at tail
+                4. Cut off at middle
+
+
+        algorithm
+            if(head == null && tail == null) return 
+
+            if(current == tail) return 
+
+            - traverse the list while current not null
+                - if found current == node and current.next !  null)
+                    - toBeRemove = current.next
+                    - current.next = null
+                    - tobeRemove.prev = null
+                    - tail = current;
+                return;
+            
+            return; //No node found
+
+    */
+    cutOffAfter(node: Node<T>): void {
+
+        if (this.head === null && this.tail === null) {
+            return
+        };
+
+        if (this.tail == node) {
+            return;
+        }
+
+        let current = this.head;
+
+        while (current) {
+            if (current == node && current.next != null) {
+                let toBeRemove = current.next;
+                current.next = null;
+                toBeRemove.prev = null;
+                this.tail = current;
+                return;
+            }
+
+            current = current.next;
+        }
+
+        return; //No node found
+    }
 
     /*
         5 Potential cases
@@ -252,8 +312,6 @@ export class DoublyLinkedList<T> {
                     toBeRemove!.prev = null;
                     this.tail = current;
                 }
-
-
 
                 return;
             }

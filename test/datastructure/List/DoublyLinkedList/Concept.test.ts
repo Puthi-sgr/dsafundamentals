@@ -195,4 +195,49 @@ describe('DoublyLinkedList insertAfter and removeAfter', () => {
         expect(list.tail?.data).toBe('A');
         expect(list.tail?.next).toBeNull();
     });
+
+    test('cutAfter (repeated removeAfter) clears all forward history from a node', () => {
+        list.addLast('A');
+        list.addLast('B');
+        list.addLast('C');
+        list.addLast('D');
+        const cutPoint = list.head!.next!; // B
+
+        while (cutPoint.next) {
+            list.removeAfter(cutPoint);
+        }
+
+        expect(list.head?.data).toBe('A');
+        expect(list.head?.prev).toBeNull();
+        expect(cutPoint.data).toBe('B');
+        expect(cutPoint.next).toBeNull();
+        expect(list.tail).toBe(cutPoint);
+        expect(list.tail?.next).toBeNull();
+    });
+
+    test('cutOffAfter cuts off the list after a node', () => {
+        list.addLast('A');
+        list.addLast('B');
+        list.addLast('C');
+        list.addLast('D');
+
+        const a = list.head!;
+        const b = a.next!;
+        const c = b.next!;
+        const d = c.next!;
+
+        list.cutOffAfter(b);
+
+        expect(list.head).toBe(a);
+        expect(list.tail).toBe(b);
+        expect(a.prev).toBeNull();
+        expect(b.next).toBeNull();
+        expect(b.prev).toBe(a);
+        expect(list.tail?.next).toBeNull();
+
+        // Detached chain starts at C with no prev.
+        expect(c.prev).toBeNull();
+        expect(c.next).toBe(d);
+        expect(d.prev).toBe(c);
+    });
 });
