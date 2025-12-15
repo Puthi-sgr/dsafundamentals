@@ -1,48 +1,49 @@
-import { useState } from "react";
-import { BrowserHistory } from "./datastructure/List/DoublyLinkedList/excercise/BrowserHistory";
-
-const BrowserHistoryComponent = () => {
-  const [history] = useState(() => new BrowserHistory());
-  const [currentPage, setCurrentPage] = useState<string | null>(null);
-
-  const visitPage = () => {
-    const newPage = `Page ${Math.floor(Math.random() * 100)}`;
-    history.visitPage(newPage);
-    setCurrentPage(history.getCurrentPage());
-  };
-
-  const goBack = () => {
-    setCurrentPage(history.goBack());
-  };
-
-  const goForward = () => {
-    setCurrentPage(history.goForward());
-  };
-
-  return (
-    <div className="card">
-      <h2 className="title">Custom Browser History</h2>
-      <div>
-        <p className="label">Current Page:</p>
-        <p className="value">{currentPage || "No Page Yet"}</p>
-      </div>
-      <div className="row">
-        <button onClick={visitPage} className="button button-primary" type="button">
-          Visit New Page
-        </button>
-        <button onClick={goBack} className="button" type="button">
-          Back
-        </button>
-        <button onClick={goForward} className="button" type="button">
-          Forward
-        </button>
-      </div>
-    </div>
-  );
-};
+import { useEffect, useState } from "react";
+import { BrowserHistoryComponent } from "./components/BrowserHistoryComponent";
+import { InfiniteImageCarouselComponent } from "./components/InfiniteImageCarouselComponent";
+import { getRouteFromHash, setRoute, type RouteId } from "./routes";
 
 function App() {
-  return <BrowserHistoryComponent />;
+  const [route, setRouteState] = useState<RouteId>(() => getRouteFromHash(window.location.hash));
+
+  useEffect(() => {
+    const onHashChange = () => setRouteState(getRouteFromHash(window.location.hash));
+    window.addEventListener("hashchange", onHashChange);
+    onHashChange();
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const content = route === "browser-history" ? <BrowserHistoryComponent /> : <InfiniteImageCarouselComponent />;
+
+  return (
+    <div className="layout">
+      <nav className="nav">
+        <a
+          className="nav-link"
+          href="#/browser-history"
+          aria-current={route === "browser-history" ? "page" : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            setRoute("browser-history");
+          }}
+        >
+          Browser History
+        </a>
+        <a
+          className="nav-link"
+          href="#/infinite-carousel"
+          aria-current={route === "infinite-carousel" ? "page" : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            setRoute("infinite-carousel");
+          }}
+        >
+          Infinite Carousel
+        </a>
+      </nav>
+      {content}
+    </div>
+  );
 }
 
 export default App;

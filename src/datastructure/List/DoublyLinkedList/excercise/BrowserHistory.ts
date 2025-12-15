@@ -132,4 +132,16 @@ export class BrowserHistory {
 
         return this.current!.data;
     }
+
+    isEmpty(): boolean {
+        return this.current == null && this.historyList.head == null && this.historyList.tail == null;
+    }
+
+    canGoBack(): boolean {
+        return this.current != null && this.current.prev != null;
+    }
+
+    canGoForward(): boolean {
+        return this.current != null && this.current.next != null;
+    }
 }

@@ -322,6 +322,10 @@ export class DoublyLinkedList<T> {
         return; //No node found
     }
 
+    get isEmpty(): boolean {
+        return this.head === null && this.tail === null;
+    }
+
 
     printForward(): void {
         let node = this.head;

@@ -10,6 +10,39 @@ body {
   color: #e6edf7;
 }
 
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid rgba(230, 237, 247, 0.15);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link[aria-current="page"] {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.6);
+}
+
 .card {
   max-width: 420px;
   border: 1px solid rgba(230, 237, 247, 0.15);
@@ -55,6 +88,15 @@ body {
 
 .button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .button-primary {

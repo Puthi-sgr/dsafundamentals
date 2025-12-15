@@ -10,7 +10,21 @@ export class Node<T> {
     }
 }
 
+
+
 //Circular doubly linked list should not have tail or head because any node can be a head or tail. So the only valid reference is the current node;
+
+/*
+    But why circular linked list?
+    - It is made to solve a kind of problem that involves rotations, infinite wrap around, and a never ending list(Not infinite size). 
+    
+    * Why not array?
+        - Problem at insertions and deletions at arbitrary position -> array shift stuff -> More expensive -> o(n) ops
+
+    * If a problem requires fast insert and deletion linked list is the choice.ion
+        But why?
+          - By nature, a linked list node only needs to rewire neighboring nodes pointer to do insert and delete, massive shifting behavior. -> O(1) ops
+*/
 
 //The invariant of a circular doubly list are 
 /*
@@ -58,11 +72,6 @@ export class CircularDoublyLinkedList<T> {
                 size++
         return
     */
-
-        //How do you run a specif test file in jest?
-        //npx jest <path-to-test-file>
-        
-        
     insertAfterCurrent(value: T): void {
 
         if (this.current == null) {
@@ -85,4 +94,64 @@ export class CircularDoublyLinkedList<T> {
         }
     }
 
+    //  moveForward
+    /*
+        contract:
+            input: void
+            output: the node data
+
+        design:
+            - simply move current to next
+            - case of 1 element: the algo should bring back to itself
+            - No list just give back null
+
+        algorithm:
+            if(current == null) return null;
+            current = current.next
+            return current.data
+
+    */
+    moveForward(): T | null {
+        if (this.current == null) return null;
+        this.current = this.current.next!;
+        return this.current.data;
+    }
+
+    // moveBackward
+    /*
+        Basically the same as move forward but move to prev instead
+    */
+    moveBackward(): T | null {
+        if (this.current == null) return null;
+        this.current = this.current.prev!;
+        return this.current.data;
+    }
+
+    //getCurrent
+    /*
+        contract:
+            input: void
+            output: current data
+        
+        design:
+            - no list just return null
+            - have list return current data
+
+        algorithm:
+            if(current == null) return null
+            return current.data
+    */
+    getCurrent(): T | null {
+        if (this.current == null) return null;
+        return this.current.data;
+    }
+
+    get Size(): number {
+        return this.size;
+    }
+
+    get IsEmpty(): boolean {
+        if (this.size == 0 && this.current == null) return true;
+        return false;
+    }
 }
