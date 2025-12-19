@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserHistoryComponent } from "./components/BrowserHistoryComponent";
 import { InfiniteImageCarouselComponent } from "./components/InfiniteImageCarouselComponent";
+import { LRUCacheComponent } from "./components/LRUCacheComponent";
 import { getRouteFromHash, setRoute, type RouteId } from "./routes";
 
 function App() {
@@ -13,7 +14,14 @@ function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  const content = route === "browser-history" ? <BrowserHistoryComponent /> : <InfiniteImageCarouselComponent />;
+  const content =
+    route === "browser-history" ? (
+      <BrowserHistoryComponent />
+    ) : route === "infinite-carousel" ? (
+      <InfiniteImageCarouselComponent />
+    ) : (
+      <LRUCacheComponent />
+    );
 
   return (
     <div className="layout">
@@ -39,6 +47,17 @@ function App() {
           }}
         >
           Infinite Carousel
+        </a>
+        <a
+          className="nav-link"
+          href="#/lru-cache"
+          aria-current={route === "lru-cache" ? "page" : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            setRoute("lru-cache");
+          }}
+        >
+          LRU Cache
         </a>
       </nav>
       {content}
