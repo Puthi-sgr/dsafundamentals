@@ -36,6 +36,7 @@
         - Use a doubly linked list to represent the "feed" with heads and tail
         - The head represent the most recent activity 
         - Each nodes will have its own index to be deleted later O(n) ops here
+        - Current index will represent the current user's position in the feed to move back and forth
         - Initial load up will show all of the activity and for every activity event, the list will be refresh and show the most recent ones (Head)
             
 
@@ -52,8 +53,17 @@
                 what we have:
                     - Define linked list in our directory
             
-            Concept: (Skipped)
-            
+            Concept:
+                Doubly linked list consist of left,right nodes, the nodes is the activity
+                semantic invariant:
+                    - Recency rule: The list ordered most recent first (Implemented)
+                    - addActivity: means if you add x, x will appear first  <-x <-> y <-> z -> (Implemented)
+                    - deleteActivity at index: remove the node the at index and rewire remaining nodes
+                    - showActivities: Display the data from the node list map to an array and display to UI
+                    - Empty meaning: No activities just return an empty mapped array []
+                    - Navigation we will use index as the user position.
+
+
             Operation analysis natively for this context (linked list):
                 - Constructor to construct the feed
                 - addHead(data:string): void O(1)
@@ -61,24 +71,10 @@
                 - listTraversal(): Node O(n)
 
             Design:
-                - Class Node {activity:string, index:number, left:node, right:node, size:number}
-                (Size act as an invariant and a corruption handler)
+                - Add size that belongs to the entire list as the source of truth the tells the size of feed.
                 - Size is triggered by Add and removed
 
-                - Remove node will be detached to save memory
-                - Class SocialMediaActivityFeed{
-                    construct();
-                    addHead(data:string):void
-                    removeAt(index:number):void 
-                    listTraversal(): node
-                }
-
-                Invariant (What makes something retain its meaning)
-                - Head: Most recent
-                - No list = size = 0, head = null, tail = null
-                - One node = node's prev & next = null
-                - List(Feed) retain its meaning by "Rewiring procedure"
-                
+                How you handle edge case, its an option
                 Edge case handle:
                     No list: Return []
 
@@ -86,11 +82,41 @@
                     Delete at tail
                     Delete at middle
 
-            Implementation:
+            Implementation:                
+                Implementation invariant (What makes something retain its meaning):
 
+                One node = head.next === null && head.prev === null, tail === head
+                No list = size === 0, head === null && tail === null
+                Multi list = head != null && head.next != null
+                
+                - Recency rule: 
+                    addHead must insert new node at head and keep the tail the same
+                    rewire rules: 
+                        if(size === 0 && head === null && tail === null):
+                           newNode.next = head, head = newNode, head.prev = null
+                        otherwise:
+                            newNode.next = head, head = newNode, head.prev = null
+                - DeleteActivity: 
+                    traverse from head node until it hit to be deleted nodes at index
+                    rewires: 
+                        if at index at head: head = head.next, head.prev = null (Detach)
+                -
+                - List(Feed) retain its meaning by "Rewiring procedure"
+              - Class Node {activity:string, left:node, right:node}
+                (Size act as an invariant and a corruption handler)
             addHead(data:string): void{
             data owns a node(new)
             move head to new node
             (rewires the node along the process)
             }
+             - Remove node will be detached to save memory
+                - Class SocialMediaActivityFeed{
+                    Node:node
+                    size:number
+                    index:number
+                    construct();
+                    addHead(data:string):void
+                    removeAt(index:number):void 
+                    listTraversal(): node
+                }
 */
