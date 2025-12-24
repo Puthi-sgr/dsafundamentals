@@ -35,9 +35,8 @@
         - The component is the social media
         - Use a doubly linked list to represent the "feed" with heads and tail
         - The head represent the most recent activity 
-        - Each nodes will have its own index to be deleted later O(n) ops here
         - Current index will represent the current user's position in the feed to move back and forth
-        - Initial load up will show all of the activity and for every activity event, the list will be refresh and show the most recent ones (Head)
+        - Initial load up will show all of the activity and for every activity event, the feed will be refresh and show the most recent ones
             
 
     Design decomposition:
@@ -54,69 +53,120 @@
                     - Define linked list in our directory
             
             Concept:
-                Doubly linked list consist of left,right nodes, the nodes is the activity
+                - Doubly linked list consist of left,right nodes, the nodes is the activity
+
                 semantic invariant:
                     - Recency rule: The list ordered most recent first (Implemented)
                     - addActivity: means if you add x, x will appear first  <-x <-> y <-> z -> (Implemented)
                     - deleteActivity at index: remove the node the at index and rewire remaining nodes
                     - showActivities: Display the data from the node list map to an array and display to UI
                     - Empty meaning: No activities just return an empty mapped array []
-                    - Navigation we will use index as the user position.
 
+                Operation analysis natively for this context (linked list):
+                    - Constructor to construct the feed
+                    - addHead(data:string): void O(1)
+                    - removeAt(index:number): void O(n)
+                    - getSize(): number
+                    - resetToHead():void
+                    - getCurrent():string | null
+                    - next():string | null
+                    - prev():string | null
 
-            Operation analysis natively for this context (linked list):
-                - Constructor to construct the feed
-                - addHead(data:string): void O(1)
-                - removeAt(index:number): void O(n)
-                - listTraversal(): Node O(n)
+                Edge case analysis:
+                    state bucket (Focuses on the application level, which is the feed):
+                        - Empty feed = empty list
+                        - 1 Activity = one node
+                        - Multiple activities = 2+ nodes   
+
+                    position bucket(The valid and invalid position that an operation can be in this structure of this linked list):
+                        valid:
+                            - Head
+                            - Middles:                           
+                            -Tail
+                        invalid:                    
+                            - if index beyond these structure
+                            - if index bigger or smaller than size
+
+                    process bucket:
+                        pre-condition:
+                            - removeAt: require valid index
+                            - addHead: require valid string activity
+                        during operation:
+                            - addHead: rewires the list back to new node
+                        post-condition:
+                            - class invariant still holds: head still head, tail, rewired
 
             Design:
-                - Add size that belongs to the entire list as the source of truth the tells the size of feed.
+                - Null head & tail when empty to keep things simple
+                - removeAt: deleting node must detach to avoid corruption
+                - Declare size that belongs to the list and tell the size of the list
                 - Size is triggered by Add and removed
-
-                How you handle edge case, its an option
-                Edge case handle:
-                    No list: Return []
-
-                    Delete at head
-                    Delete at tail
-                    Delete at middle
-
+                - Recency rule: New Nodes added is the new head
+                - Cursor based navigation:
+                    Declare field current.
+                    Navigation methods:
+                        resetToHead():string | null if head null return null
+                        getCurrent():string | null if current null return null
+                        next():string | null if next null keep current
+                        prev():string | null if prev null keep current
+               
+                - addActivity: if no list, new node becomes and tail, if activity is  " " invalid
+                - deleteActivity at index: if index beyond size return invalid
+                - showActivities: node data in string is processed out cut out white spaces
+               
             Implementation:                
-                Implementation invariant (What makes something retain its meaning):
-
-                One node = head.next === null && head.prev === null, tail === head
-                No list = size === 0, head === null && tail === null
-                Multi list = head != null && head.next != null
+                Implementation state invariant:
+                    - One node = head.next === null && head.prev === null, tail === head
+                    - No list = size === 0, head === null && tail === null
+                    - Multi list = head != null && head.next != null
                 
-                - Recency rule: 
-                    addHead must insert new node at head and keep the tail the same
-                    rewire rules: 
-                        if(size === 0 && head === null && tail === null):
-                           newNode.next = head, head = newNode, head.prev = null
-                        otherwise:
-                            newNode.next = head, head = newNode, head.prev = null
-                - DeleteActivity: 
-                    traverse from head node until it hit to be deleted nodes at index
-                    rewires: 
-                        if at index at head: head = head.next, head.prev = null (Detach)
-                -
-                - List(Feed) retain its meaning by "Rewiring procedure"
-              - Class Node {activity:string, left:node, right:node}
-                (Size act as an invariant and a corruption handler)
-            addHead(data:string): void{
-            data owns a node(new)
-            move head to new node
-            (rewires the node along the process)
-            }
-             - Remove node will be detached to save memory
-                - Class SocialMediaActivityFeed{
-                    Node:node
-                    size:number
-                    index:number
-                    construct();
-                    addHead(data:string):void
-                    removeAt(index:number):void 
-                    listTraversal(): node
-                }
+                Invalid boundary:
+                    - if(index > 0 || index < size)           
 */
+
+class Node {
+    data: string = "";
+    right: Node | null = null;
+    left: Node | null = null;
+}
+
+class ActivityFeed {
+    current: Node | null = null;
+    size: number = 0;
+    head: Node | null = null;
+    tail: Node | null = null;
+
+    constructor() {
+        this.size = 0;
+        this.head = null;
+        this.tail = null;
+        this.current = null;
+    }
+
+    addHead(data: string): void {
+
+    }
+
+    removeAt(index: number): void { }
+
+    resetToHead(): void { }
+
+    getCurrent(): string | null { }
+
+    next(): string | null { }
+
+    prev(): string | null { }
+
+    getSize(): number {
+        return this.size;
+    }
+
+    - Constructor to construct the feed
+    - addHead(data: string): void O(1)
+        - removeAt(index: number): void O(n)
+            - getSize(): number
+                - resetToHead(): void
+                    - getCurrent(): string | null
+                        - next(): string | null
+                            - prev(): string | null
+}
