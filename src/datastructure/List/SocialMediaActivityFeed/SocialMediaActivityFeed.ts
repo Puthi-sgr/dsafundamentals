@@ -126,8 +126,8 @@
 
 class Node {
     data: string = "";
-    right: Node | null = null;
-    left: Node | null = null;
+    next: Node | null = null;
+    prev: Node | null = null;
 }
 
 class ActivityFeed {
@@ -143,11 +143,99 @@ class ActivityFeed {
         this.current = null;
     }
 
-    addHead(data: string): void {
+    showActivities(): string[] { }
 
+    addActivity(activity: string): void { }
+
+    deleteActivity(index: number): void { }
+
+    /*
+        Algorithm: addHead:
+        - Pre-condition:
+            if data is empty string return
+        - While changing:
+            - create new node
+            - rewires the list back to new node
+            - transition the head to the new node
+            - update size
+        - Post-condition: 
+            - size increased by 1
+            - head is the new node (most recent activity)
+            - tail remains the same if list was not empty
+        - Operation:
+            - if (data.trim() === "") return
+            - if no head:
+                - create new node, head = newNode, tail = newNode
+            - else:
+                - create new Node
+                - newNode.next = head
+                - head.prev = newNode
+                - head = newNode
+            - size++
+
+   
+    */
+    addHead(data: string): void {
+        if (data.trim() === "") return;
+
+        const newNode = new Node();
+        newNode.data = data;
+
+        if (this.head === null && this.tail === null && this.size === 0) {
+            this.head = newNode;
+            this.tail = newNode;
+        } else {
+
+            newNode.next = this.head;
+            this.head!.prev = newNode;
+            this.head = newNode;
+        }
+        this.size++;
+        return;
     }
 
+    /*
+        Algorithm: removeAt
+        - Pre-condition:
+            if index is not positive or index >= size return
+        - while finding:
+            - start from head
+            - move forward to index by next reference
+            - if found node to remove change
+            - if current.next is null return
+           
+        - while changing:
+            - if node to remove is head:
+                - toBeRemoved = head
+                - head = head.next
+                - head.prev = null
+                - toBeRemoved.next = null
+            else if node to remove is tail:
+                - toBeRemoved = tail
+                - tail = tail.prev
+                - tail.next = null
+                - toBeRemoved.prev = null
+            else:
+                - toBeRemoved = current
+                - current.prev.next = current.next
+                - current.next.prev = current.prev
+                - current.next = null
+                - current.prev = null
+        size--
+
+        - Post-condition:
+            - size decreased by 1
+            - head is updated if head was removed
+            - tail is updated if tail was removed
+            - remaining nodes rewired correctly
+
+
+
+
+    */
     removeAt(index: number): void { }
+
+
 
     resetToHead(): void { }
 
@@ -161,12 +249,5 @@ class ActivityFeed {
         return this.size;
     }
 
-    - Constructor to construct the feed
-    - addHead(data: string): void O(1)
-        - removeAt(index: number): void O(n)
-            - getSize(): number
-                - resetToHead(): void
-                    - getCurrent(): string | null
-                        - next(): string | null
-                            - prev(): string | null
+
 }
