@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserHistoryComponent } from "./components/BrowserHistoryComponent";
 import { InfiniteImageCarouselComponent } from "./components/InfiniteImageCarouselComponent";
 import { LRUCacheComponent } from "./components/LRUCacheComponent";
+import { SocialMediaActivityFeedComponent } from "./components/SocialMediaActivityFeedComponent";
 import { getRouteFromHash, setRoute, type RouteId } from "./routes";
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
       <BrowserHistoryComponent />
     ) : route === "infinite-carousel" ? (
       <InfiniteImageCarouselComponent />
+    ) : route === "activity-feed" ? (
+      <SocialMediaActivityFeedComponent />
     ) : (
       <LRUCacheComponent />
     );
@@ -58,6 +61,17 @@ function App() {
           }}
         >
           LRU Cache
+        </a>
+        <a
+          className="nav-link"
+          href="#/activity-feed"
+          aria-current={route === "activity-feed" ? "page" : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            setRoute("activity-feed");
+          }}
+        >
+          Activity Feed
         </a>
       </nav>
       {content}

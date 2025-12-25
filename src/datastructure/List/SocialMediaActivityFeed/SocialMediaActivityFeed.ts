@@ -130,7 +130,7 @@ class Node {
     prev: Node | null = null;
 }
 
-class ActivityFeed {
+export class SocialMediaActivityFeed {
     current: Node | null = null;
     size: number = 0;
     head: Node | null = null;
@@ -143,13 +143,83 @@ class ActivityFeed {
         this.current = null;
     }
 
-    showActivities(): string[] { }
+    /*
+         ** Application layer algorithm **
+         Algorithm: showActivities
+         Edge case analysis:
+            - Empty list 
+            - One or more nodes
+        pre-condition:
+            - none
+        while finding:
+            - start from head
+            - traverse through next reference until current is null
+            - collect data from nodes an push into result array
+        post-condition:
+            - array of activities in showing the most recent first order
 
-    addActivity(activity: string): void { }
+        operation:
+            if head is null return []
 
-    deleteActivity(index: number): void { }
+            let result: string[] = []
+            let current = head
+
+            while current is not null:
+                result.push(current.data)
+                current = current.next
+            return result
+    */
+
+    showActivities(): string[] {
+        if (this.head === null) return [];
+
+        const result: string[] = [];
+        let current = this.head;
+
+        while (current !== null) {
+            result.push(current.data);
+            if (current.next === null) break;
+            current = current.next;
+        }
+
+        return result;
+    }
 
     /*
+       ** Application layer algorithm **
+       Algorithm: addActivity
+       - Pre-condition:
+           if activity is empty string return
+       - Operation:
+           call addHead(activity)
+       - Post-condition:
+            One more activity in the feed
+   */
+    addActivity(activity: string): void {
+        if (activity.trim() === "") return;
+        this.addHead(activity);
+    }
+
+
+    /*
+        ** Application layer algorithm **
+        Algorithm: deleteActivity
+        - Pre-condition:
+            if index is not positive or index >= size return
+        - Operation:
+            call removeAt(index)
+        - Post-condition:
+            One less activity in the feed
+    */
+    deleteActivity(index: number): void {
+        if (index < 0 || index >= this.size) return;
+        this.removeAt(index);
+    }
+
+    /*
+        Edge case analysis:
+            - Empty list (handled)
+            - One or more nodes (handled)
         Algorithm: addHead:
         - Pre-condition:
             if data is empty string return
@@ -172,7 +242,7 @@ class ActivityFeed {
                 - head.prev = newNode
                 - head = newNode
             - size++
-
+ 
    
     */
     addHead(data: string): void {
@@ -196,13 +266,23 @@ class ActivityFeed {
 
     /*
         Algorithm: removeAt
+        Edge cases: 
+            - One head or tail
+            - Middle node
+
         - Pre-condition:
             if index is not positive or index >= size return
+
+            if size is 1:
+                - head = null
+                - tail = null
+                - size = 0
+                - return
         - while finding:
             - start from head
             - move forward to index by next reference
             - if found node to remove change
-            - if current.next is null return
+            - if current is null return
            
         - while changing:
             - if node to remove is head:
@@ -229,21 +309,91 @@ class ActivityFeed {
             - tail is updated if tail was removed
             - remaining nodes rewired correctly
 
-
-
-
     */
-    removeAt(index: number): void { }
+    removeAt(index: number): void {
+        if (index < 0 || index >= this.size) return;
+        let current = this.head;
+        let currentIndex = 0;
 
+        while (current !== null) {
+            if (currentIndex === index) {
+                if (current === this.head) {
+                    if (this.size === 1) {
+                        this.head = null;
+                        this.tail = null;
+                    } else {
+                        const toBeRemoved = this.head;
+                        this.head = this.head.next;
+                        this.head!.prev = null;
+                        toBeRemoved.next = null;
+                    }
+                } else if (current === this.tail) {
+                    const toBeRemoved = this.tail;
+                    this.tail = this.tail.prev;
+                    this.tail!.next = null;
+                    toBeRemoved.prev = null;
+                } else {
+                    const toBeRemoved = current;
+                    current.prev!.next = current.next;
+                    current.next!.prev = current.prev;
+                    toBeRemoved.next = null;
+                    toBeRemoved.prev = null;
+                }
+                this.size--;
+            }
+            current = current.next;
+            currentIndex++;
+        }
+        return;
+    }
 
+    /*
+        Algorithm: resetToHead
+        - Pre-condition: 
+            - head is not null
+        - Operation:
+            - set current to head
+        - Post-condition:
+            - current points to head node
+    */
+    resetToHead(): void {
+        if (this.head !== null) {
+            this.current = this.head;
+        }
+    }
 
-    resetToHead(): void { }
+    /*
+        Algorithm: getCurrent
+        - Pre-condition:
+            - current is not null
+        - Operation:
+            if current is null return null
+            otherwise: return current.data
+        - Post-condition:
+            - returns the data of the current noe
+    */
+    getCurrent(): string | null {
+        if (this.current === null) {
+            return null;
+        }
+        return this.current.data;
+    }
 
-    getCurrent(): string | null { }
+    next(): string | null {
+        if (this.current === null || this.current.next === null) {
+            return null;
+        }
+        this.current = this.current.next;
+        return this.current.data;
+    }
 
-    next(): string | null { }
-
-    prev(): string | null { }
+    prev(): string | null {
+        if (this.current === null || this.current.prev === null) {
+            return null;
+        }
+        this.current = this.current.prev;
+        return this.current.data;
+    }
 
     getSize(): number {
         return this.size;
