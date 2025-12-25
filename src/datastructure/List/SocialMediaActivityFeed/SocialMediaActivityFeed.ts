@@ -198,6 +198,7 @@ export class SocialMediaActivityFeed {
     addActivity(activity: string): void {
         if (activity.trim() === "") return;
         this.addHead(activity);
+        this.showActivities();
     }
 
 
@@ -214,6 +215,7 @@ export class SocialMediaActivityFeed {
     deleteActivity(index: number): void {
         if (index < 0 || index >= this.size) return;
         this.removeAt(index);
+        this.showActivities();
     }
 
     /*
@@ -317,6 +319,10 @@ export class SocialMediaActivityFeed {
 
         while (current !== null) {
             if (currentIndex === index) {
+                const wasCurrent = this.current === current;
+                const nextCandidate = current.next;
+                const prevCandidate = current.prev;
+
                 if (current === this.head) {
                     if (this.size === 1) {
                         this.head = null;
@@ -340,6 +346,12 @@ export class SocialMediaActivityFeed {
                     toBeRemoved.prev = null;
                 }
                 this.size--;
+
+                if (this.size === 0) {
+                    this.current = null;
+                } else if (wasCurrent) {
+                    this.current = nextCandidate ?? prevCandidate ?? this.head;
+                }
             }
             current = current.next;
             currentIndex++;
